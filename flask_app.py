@@ -1,10 +1,20 @@
 import os
 from flask import Flask, request, jsonify, render_template, Response, stream_with_context
-from openai import OpenAI
+import openai
 
 app = Flask(__name__)
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What is the weather today?"}
+    ]
+)
+
+print(response.choices[0].message['content'])
 
 def load_documents_from_folder(folder_path):
     documents = []
